@@ -1,21 +1,24 @@
-name: auto-merge
-on: pull_request
+name: Auto-merge and Update Changelog
+
+on:
+  pull_request:
 
 permissions:
   contents: write
   pull-requests: write
-  
+
 jobs:
- auto-merge:
+  auto-merge:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'Tommylovespython' }}
     steps:
-      - name: Auto_merge
-        uses: jge162/Action-workflows@main
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          github-token: "${{ secrets.WORKFLOW_SECRET }}"
+          ref: main
+
       - name: Enable auto-merge
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: gh pr merge --auto --merge "$PR_URL" 
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.WORKFLOW_SECRET}}
